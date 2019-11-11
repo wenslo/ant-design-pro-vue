@@ -1,6 +1,4 @@
-import Vue from 'vue'
 import { login, logout } from '@/api/login'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
 // import { welcome } from '@/utils/util'
 
 const user = {
@@ -10,7 +8,9 @@ const user = {
     welcome: '',
     avatar: '',
     roles: [],
-    info: {}
+    info: {},
+    enums: {},
+    permissions: {}
   },
 
   mutations: {
@@ -29,18 +29,48 @@ const user = {
     },
     SET_INFO: (state, info) => {
       state.info = info
+    },
+    SET_ENUMS: (state, enums) => {
+      state.enums = enums
+    },
+    SET_PERMISSIONS: (state, permissions) => {
+      state.permissions = permissions
     }
   },
 
   actions: {
-    // 登录
     Login ({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
+          const userDetail = response.user
+          console.log('------------------------------------------------')
+          console.log(userDetail)
+          // commit('SET_INFO', userDetail)
+          // 登录
           // console.log(response)
-          const result = response.user
-          Vue.ls.set(ACCESS_TOKEN, '1234', 7 * 24 * 60 * 60 * 1000)
-          commit('SET_TOKEN', result.token)
+          // Vue.ls.set(ACCESS_TOKEN, '1234', 7 * 24 * 60 * 60 * 1000)
+          // commit('SET_TOKEN', result.token)
+          // console.log(result)
+          // if (result.role && result.role.permissions.length > 0) {
+          //   const role = result.role
+          //   role.permissions = result.role.permissions
+          //   role.permissions.map(per => {
+          //     if (per.actionEntitySet != null && per.actionEntitySet.length > 0) {
+          //       const action = per.actionEntitySet.map(action => { return action.action })
+          //       per.actionList = action
+          //     }
+          //   })
+          //   role.permissionList = role.permissions.map(permission => { return permission.permissionId })
+          //   commit('SET_ROLES', result.role)
+          //   commit('SET_INFO', result)
+          // } else {
+          //   reject(new Error('getInfo: roles must be a non-null array !'))
+          // }
+          //
+          // commit('SET_NAME', { name: result.name, welcome: welcome() })
+          // commit('SET_AVATAR', result.avatar)
+          //
+          // resolve(response)
           resolve()
         }).catch(error => {
           reject(error)
@@ -49,36 +79,11 @@ const user = {
     },
 
     // 获取用户信息
-    // GetInfo ({ commit }) {
-    //   return new Promise((resolve, reject) => {
-    //     getInfo().then(response => {
-    //       const result = response.result
-    //
-    //       if (result.role && result.role.permissions.length > 0) {
-    //         const role = result.role
-    //         role.permissions = result.role.permissions
-    //         role.permissions.map(per => {
-    //           if (per.actionEntitySet != null && per.actionEntitySet.length > 0) {
-    //             const action = per.actionEntitySet.map(action => { return action.action })
-    //             per.actionList = action
-    //           }
-    //         })
-    //         role.permissionList = role.permissions.map(permission => { return permission.permissionId })
-    //         commit('SET_ROLES', result.role)
-    //         commit('SET_INFO', result)
-    //       } else {
-    //         reject(new Error('getInfo: roles must be a non-null array !'))
-    //       }
-    //
-    //       commit('SET_NAME', { name: result.name, welcome: welcome() })
-    //       commit('SET_AVATAR', result.avatar)
-    //
-    //       resolve(response)
-    //     }).catch(error => {
-    //       reject(error)
-    //     })
-    //   })
-    // },
+    GetInfo ({ commit }) {
+      return new Promise((resolve, reject) => {
+        resolve()
+      })
+    },
 
     // 登出
     Logout ({ commit, state }) {
@@ -90,7 +95,8 @@ const user = {
         }).finally(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
-          Vue.ls.remove(ACCESS_TOKEN)
+          commit('SET_ENUMS', '')
+          commit('SET_PERMISSIONS', '')
         })
       })
     }

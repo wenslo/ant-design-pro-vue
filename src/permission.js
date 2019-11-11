@@ -18,6 +18,7 @@ router.beforeEach((to, from, next) => {
   to.meta && (typeof to.meta.title !== 'undefined' && setDocumentTitle(`${to.meta.title} - ${domTitle}`))
   if (Vue.ls.get(ACCESS_TOKEN)) {
     /* has token */
+    console.log(Vue.ls.get(ACCESS_TOKEN))
     if (to.path === '/user/login') {
       next({ path: defaultRoutePath })
       NProgress.done()
@@ -55,6 +56,7 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
+    console.log(to.name)
     if (whiteList.includes(to.name)) {
       // 在免登录白名单，直接进入
       next()
