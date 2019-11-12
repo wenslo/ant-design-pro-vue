@@ -1,4 +1,5 @@
 import { login, logout } from '@/api/login'
+import store from '@/store'
 // import { welcome } from '@/utils/util'
 
 const user = {
@@ -10,7 +11,7 @@ const user = {
     roles: [],
     info: {},
     enums: {},
-    permissions: {}
+    permissions: []
   },
 
   mutations: {
@@ -43,9 +44,15 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           const userDetail = response.user
+          const permissions = response.permissions
           console.log('------------------------------------------------')
           console.log(userDetail)
-          // commit('SET_INFO', userDetail)
+          commit('SET_INFO', userDetail)
+          commit('SET_ENUMS', response.enums)
+          commit('SET_PERMISSIONS', permissions)
+          if (permissions && permissions.length > 0) {
+            console.log(permissions)
+          }
           // 登录
           // console.log(response)
           // Vue.ls.set(ACCESS_TOKEN, '1234', 7 * 24 * 60 * 60 * 1000)
@@ -81,7 +88,9 @@ const user = {
     // 获取用户信息
     GetInfo ({ commit }) {
       return new Promise((resolve, reject) => {
-        resolve()
+        console.log('get info console log')
+        console.log(store.getters.info)
+        resolve(store.getters.info)
       })
     },
 
@@ -96,7 +105,7 @@ const user = {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           commit('SET_ENUMS', '')
-          commit('SET_PERMISSIONS', '')
+          commit('SET_PERMISSIONS', [])
         })
       })
     }
