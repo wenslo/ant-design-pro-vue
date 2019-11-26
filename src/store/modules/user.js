@@ -44,15 +44,15 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           const userDetail = response.user
-          const permissions = response.permissions
+          const permission = response.permission
           console.log('------------------------------------------------')
           console.log(userDetail)
           commit('SET_INFO', userDetail)
           commit('SET_ENUMS', response.enums)
-          commit('SET_PERMISSIONS', permissions)
-          if (permissions && permissions.length > 0) {
-            console.log(permissions)
-          }
+          commit('SET_PERMISSIONS', permission)
+          // if (permission && permission.length > 0) {
+          //   console.log(permission)
+          // }
           // 登录
           // console.log(response)
           // Vue.ls.set(ACCESS_TOKEN, '1234', 7 * 24 * 60 * 60 * 1000)
@@ -78,7 +78,7 @@ const user = {
           // commit('SET_AVATAR', result.avatar)
           //
           // resolve(response)
-          resolve()
+          resolve(userDetail)
         }).catch(error => {
           reject(error)
         })
