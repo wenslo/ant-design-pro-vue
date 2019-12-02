@@ -16,8 +16,9 @@ const defaultRoutePath = '/dashboard/workplace'
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
   to.meta && (typeof to.meta.title !== 'undefined' && setDocumentTitle(`${to.meta.title} - ${domTitle}`))
+  console.log('userinfo--------------')
   console.log(store.getters.userInfo)
-  if (store.getters.userInfo) {
+  if (store.getters.userInfo.id) {
     /* has token */
     if (to.path === '/user/login') {
       next({ path: defaultRoutePath })
@@ -63,6 +64,7 @@ router.beforeEach((to, from, next) => {
       // 在免登录白名单，直接进入
       next()
     } else {
+      console.log('-----------user.login')
       next({ path: '/user/login', query: { redirect: to.fullPath } })
       NProgress.done() // if current page is login will not trigger afterEach hook, so manually handle it
     }
