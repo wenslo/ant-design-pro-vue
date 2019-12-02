@@ -24,12 +24,11 @@ router.beforeEach((to, from, next) => {
       next({ path: defaultRoutePath })
       NProgress.done()
     } else {
-      debugger
       if (store.getters.roles.length === 0) {
         store
           .dispatch('GetInfo')
           .then(res => {
-            const roles = res
+            const roles = res.role
             store.dispatch('GenerateRoutes', { roles }).then(() => {
               console.log(roles)
               // 根据roles权限生成可访问的路由表

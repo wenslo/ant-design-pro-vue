@@ -80,7 +80,6 @@ const rootRouter = {
  */
 export const generatorDynamicRouter = (token) => {
   return new Promise((resolve, reject) => {
-    debugger
     loginService.getCurrentUserNav(token).then(res => {
       console.log('res', res)
       const { result } = res

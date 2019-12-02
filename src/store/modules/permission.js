@@ -39,6 +39,7 @@ function hasRole(roles, route) {
 
 function filterAsyncRouter (routerMap, roles) {
   console.log(roles)
+  // debugger
   const accessedRouters = routerMap.filter(route => {
     if (hasPermission(roles.permissions, route)) {
       if (route.children && route.children.length) {
@@ -58,6 +59,7 @@ const permission = {
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {
+      debugger
       state.addRouters = routers
       state.routers = constantRouterMap.concat(routers)
     }
@@ -65,7 +67,6 @@ const permission = {
   actions: {
     GenerateRoutes ({ commit }, data) {
       return new Promise(resolve => {
-        debugger
         const { roles } = data
         const accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
         commit('SET_ROUTERS', accessedRouters)
