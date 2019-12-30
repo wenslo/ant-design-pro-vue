@@ -1,6 +1,7 @@
 import { login, logout } from '@/api/login'
+import store from '@/store'
 // import store from '@/store'
-// import { welcome } from '@/utils/util'
+import { welcome } from '@/utils/util'
 
 const user = {
   state: {
@@ -11,7 +12,8 @@ const user = {
     roles: [],
     info: {},
     enums: {},
-    permissions: []
+    permissions: [],
+    generated: false
   },
 
   mutations: {
@@ -36,6 +38,9 @@ const user = {
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
+    },
+    SET_GENERATED: (state, generated) => {
+      state.generated = generated
     }
   },
 
@@ -44,12 +49,19 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           const userDetail = response.user
-          const permission = response.permission
-          console.log('------------------------------------------------')
-          console.log(userDetail)
+          const permissions = response.permissions
           commit('SET_INFO', userDetail)
           commit('SET_ENUMS', response.enums)
-          commit('SET_PERMISSIONS', permission)
+          commit('SET_NAME', { name: userDetail.nickname, welcome: welcome() })
+          permissions.map(per => {
+            if (per.actions != null && per.actions.length > 0) {
+              per.actionList = per.actions.map(action => {
+                return action.action
+              })
+            }
+          })
+          commit('SET_PERMISSIONS', permissions)
+          // commit('SET_AVATAR', userDetail.avatar)
           // if (permission && permission.length > 0) {
           //   console.log(permission)
           // }
@@ -74,8 +86,6 @@ const user = {
           //   reject(new Error('getInfo: roles must be a non-null array !'))
           // }
           //
-          // commit('SET_NAME', { name: result.name, welcome: welcome() })
-          // commit('SET_AVATAR', result.avatar)
           //
           // resolve(response)
           resolve(userDetail)
@@ -88,7 +98,7 @@ const user = {
     // 获取用户信息
     GetInfo ({ commit }) {
       return new Promise((resolve, reject) => {
-        const userInfo = {
+        /*        const userInfo = {
           'id': '4291d7da9005377ec9aec4a71ea837f',
           'name': '天野远子',
           'username': 'admin',
@@ -466,8 +476,9 @@ const user = {
         } else {
           reject(new Error('getInfo: roles must be a non-null array !'))
         }
-        console.log((JSON.stringify(userInfo)))
-        resolve(userInfo)
+        console.log((JSON.stringify(userInfo))) */
+        commit('SET_GENERATED', true)
+        resolve(store.getters.userInfo)
       })
     },
 
@@ -480,9 +491,11 @@ const user = {
           resolve()
         }).finally(() => {
           commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
+          // commit('SET_ROLES', [])
           commit('SET_ENUMS', '')
           commit('SET_PERMISSIONS', [])
+          commit('SET_INFO', [])
+          commit('SET_GENERATED', '')
         })
       })
     }
