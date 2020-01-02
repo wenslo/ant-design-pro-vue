@@ -262,7 +262,22 @@ export const asyncRouterMap = [
           }
         ]
       },
-
+      // user2
+      {
+        path: '/user2',
+        component: RouteView,
+        redirect: '/user2/list',
+        name: 'user2',
+        meta: { title: '用户列表', icon: 'user', keepAlive: true, permission: [ 'user' ] },
+        children: [
+          {
+            path: '/user2/list',
+            name: 'list',
+            component: () => import('@/views/user2/list'),
+            meta: { title: '用户列表', keepAlive: true, permission: [ 'user' ] }
+          }
+        ]
+      },
       // other
       {
         path: '/other',
