@@ -63,7 +63,7 @@ service.interceptors.response.use((response) => {
       return Promise.reject(responseData)
     }
   } else {
-    return responseData.content
+    return responseData
   }
 }, err)
 
