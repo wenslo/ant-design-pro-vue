@@ -31,6 +31,8 @@
       :columns="columns"
       :data="loadData"
     >
+      <a slot="enabled" v-if="enabled" slot-scope="enabled" href="javascript:;">启用</a>
+      <a slot="enabled" v-else href="javascript:;">禁用</a>
     </s-table>
 
   </a-card>
@@ -68,13 +70,13 @@ export default {
         {
           title: '启用状态',
           dataIndex: 'enabled',
-          key: 'enabled'
+          key: 'enabled',
+          scopedSlots: { customRender: 'enabled' }
         },
         {
           title: '操作',
           width: '150px',
-          dataIndex: 'action',
-          scopedSlots: { customRender: 'action' }
+          dataIndex: 'action'
         }
       ],
       // 加载数据方法 必须为 Promise 对象
