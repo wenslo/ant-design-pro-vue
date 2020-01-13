@@ -268,7 +268,7 @@ export const asyncRouterMap = [
         component: RouteView,
         redirect: '/user2/list',
         name: 'user2',
-        meta: { title: '用户列表', icon: 'user', keepAlive: true, permission: [ 'user' ] },
+        meta: { title: '用户管理', icon: 'user', keepAlive: true, permission: [ 'user' ] },
         children: [
           {
             path: '/user2/list',

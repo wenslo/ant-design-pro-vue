@@ -4,13 +4,13 @@
       <a-form layout="inline">
         <a-row :gutter="48">
           <a-col :md="8" :sm="24">
-            <a-form-item label="用户姓名">
+            <a-form-item v-model="queryParam.username" label="用户姓名">
               <a-input placeholder="请输入"/>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="启用状态">
-              <a-select placeholder="请选择" default-value="0">
+              <a-select v-model="queryParam.enabled" placeholder="请选择" default-value="0">
                 <a-select-option value="0">未启用</a-select-option>
                 <a-select-option value="1">已启用</a-select-option>
               </a-select>
@@ -18,7 +18,7 @@
           </a-col>
           <a-col :md="8" :sm="24">
             <span class="table-page-search-submitButtons">
-              <a-button type="primary">查询</a-button>
+              <a-button @click="loadData(queryParam)" type="primary">查询</a-button>
               <a-button style="margin-left: 8px">重置</a-button>
             </span>
           </a-col>
@@ -80,8 +80,8 @@ export default {
         }
       ],
       // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        return getUserList(parameter)
+      loadData: queryParam => {
+        return getUserList(queryParam)
           .then(res => {
             console.log('getUserList', res)
             return res
