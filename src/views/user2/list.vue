@@ -4,21 +4,21 @@
       <a-form layout="inline">
         <a-row :gutter="48">
           <a-col :md="8" :sm="24">
-            <a-form-item v-model="queryParam.username" label="用户姓名">
-              <a-input placeholder="请输入"/>
+            <a-form-item label="用户姓名">
+              <a-input v-model="queryParam.username" placeholder="请输入"/>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="启用状态">
               <a-select v-model="queryParam.enabled" placeholder="请选择" default-value="0">
-                <a-select-option value="0">未启用</a-select-option>
-                <a-select-option value="1">已启用</a-select-option>
+                <a-select-option value="false">未启用</a-select-option>
+                <a-select-option value="true">已启用</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
           <a-col :md="8" :sm="24">
             <span class="table-page-search-submitButtons">
-              <a-button @click="loadData(queryParam)" type="primary">查询</a-button>
+              <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
               <a-button style="margin-left: 8px">重置</a-button>
             </span>
           </a-col>
@@ -27,7 +27,9 @@
     </div>
 
     <s-table
+      ref="table"
       size="default"
+      rowKey="key"
       :columns="columns"
       :data="loadData"
     >
@@ -80,10 +82,11 @@ export default {
         }
       ],
       // 加载数据方法 必须为 Promise 对象
-      loadData: queryParam => {
-        return getUserList(queryParam)
+      loadData: parameter => {
+        console.log('loadData.parameter', parameter)
+        console.log('queryParam', this.queryParam)
+        return getUserList(Object.assign(parameter, this.queryParam))
           .then(res => {
-            console.log('getUserList', res)
             return res
           })
       }

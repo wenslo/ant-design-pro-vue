@@ -25,7 +25,7 @@ export default {
     },
     pageNum: {
       type: Number,
-      default: 1
+      default: 0
     },
     pageSize: {
       type: Number,
@@ -122,7 +122,7 @@ export default {
      */
     refresh (bool = false) {
       bool && (this.localPagination = Object.assign({}, {
-        current: 1, pageSize: this.pageSize
+        current: 0, pageSize: this.pageSize
       }))
       this.loadData()
     },
@@ -134,10 +134,14 @@ export default {
      */
     loadData (pagination, filters, sorter) {
       this.localLoading = true
-      const parameter = Object.assign({
-        pageNo: (pagination && pagination.current) ||
+      const parameter = {
+        pageable: {}
+      }
+
+      parameter.pageable = Object.assign({
+        page: (pagination && pagination.current && pagination.current) ||
           this.showPagination && this.localPagination.current || this.pageNum,
-        pageSize: (pagination && pagination.pageSize) ||
+        size: (pagination && pagination.pageSize) ||
           this.showPagination && this.localPagination.pageSize || this.pageSize
       },
       (sorter && sorter.field && {
