@@ -10,9 +10,9 @@
           </a-col>
           <a-col :md="8" :sm="24">
             <a-form-item label="启用状态">
-              <a-select v-model="queryParam.enabled" placeholder="请选择" default-value="0">
-                <a-select-option value="false">未启用</a-select-option>
-                <a-select-option value="true">已启用</a-select-option>
+              <a-select v-model="queryParam.enabled" placeholder="请选择" default-value="true">
+                <a-select-option value="false">禁用</a-select-option>
+                <a-select-option value="true">启用</a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
@@ -34,8 +34,61 @@
       :data="loadData"
     >
       <a slot="enabled" v-if="enabled" slot-scope="enabled" href="javascript:;">启用</a>
-      <a slot="enabled" v-else href="javascript:;">禁用</a>
+      <a slot="enabled" v-else href="javascript:;" style="color: red">禁用</a>
+
+      <span slot="action" slot-scope="text, user">
+        <template>
+          <a @click="handleEdit(user)">修改</a>
+          <a-divider type="vertical" />
+          <a @click="handleRemove(user)">删除</a>
+        </template>
+      </span>
     </s-table>
+
+    <a-modal
+      title="操作"
+      style="top: 20px;"
+      :width="800"
+      v-model="visible"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    >
+      <a-form :from="(form)=>{this.form = form}">
+        <a-input v-model="mdl.id" type="hidden"></a-input>
+
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="用户名"
+          hasFeedback
+          validateStatus="success"
+        >
+          <a-input placeholder="起一个名字" v-model="mdl.username" id="username"/>
+        </a-form-item>
+
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="昵称"
+          hasFeedback
+          validateStatus="success"
+        >
+          <a-input placeholder="起一个昵称" v-model="mdl.nickname" id="nickname"/>
+        </a-form-item>
+
+        <a-form-item
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="启用状态"
+        >
+          <a-select v-model="mdl.enabled">
+            <a-select-option value="true">启用</a-select-option>
+            <a-select-option value="false">禁用</a-select-option>
+          </a-select>
+        </a-form-item>
+
+      </a-form>
+    </a-modal>
 
   </a-card>
 </template>
@@ -51,40 +104,46 @@ export default {
   },
   data () {
     return {
+      form: null,
+      visible: false,
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 5 }
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 }
+      },
+      mdl: {},
       queryParam: {},
       // 表头
       columns: [
         {
-          title: '唯一识别码',
-          dataIndex: 'id',
-          key: 'id'
+          title: '#',
+          dataIndex: 'id'
         },
         {
           title: '用户名',
-          dataIndex: 'username',
-          key: 'username'
+          dataIndex: 'username'
         },
         {
           title: '昵称',
-          dataIndex: 'nickname',
-          key: 'nickname'
+          dataIndex: 'nickname'
         },
         {
           title: '启用状态',
           dataIndex: 'enabled',
-          key: 'enabled',
           scopedSlots: { customRender: 'enabled' }
         },
         {
           title: '操作',
           width: '150px',
-          dataIndex: 'action'
+          dataIndex: 'action',
+          scopedSlots: { customRender: 'action' }
         }
       ],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        console.log('loadData.parameter', parameter)
-        console.log('queryParam', this.queryParam)
         return getUserList(Object.assign(parameter, this.queryParam))
           .then(res => {
             return res
@@ -101,6 +160,19 @@ export default {
     },
     toggleAdvanced () {
       this.advanced = !this.advanced
+    },
+    handleEdit (user) {
+      this.mdl = Object.assign({}, user)
+      this.visible = true
+    },
+    handleRemove (user) {
+      console.log('enter into handle remove', user)
+    },
+    handleOk (user) {
+      console.log('enter into handle ok', user)
+    },
+    handleCancel () {
+      this.visible = false
     }
   },
   watch: {
