@@ -137,9 +137,11 @@ export default {
       const parameter = {
         pageable: {}
       }
-
+      if (pagination && pagination.current) {
+        pagination.current = pagination.current - 1
+      }
       parameter.pageable = Object.assign({
-        page: (pagination && pagination.current && pagination.current) ||
+        page: (pagination && pagination.current) ||
           this.showPagination && this.localPagination.current || this.pageNum,
         size: (pagination && pagination.pageSize) ||
           this.showPagination && this.localPagination.pageSize || this.pageSize
@@ -161,7 +163,7 @@ export default {
         result.then(r => {
           console.log('r is', this)
           this.localPagination = this.showPagination && Object.assign({}, this.localPagination, {
-            current: r.totalPages, // 返回结果中的当前分页数
+            current: r.number, // 返回结果中的当前分页数
             total: r.totalElements, // 返回结果中的总记录数
             showSizeChanger: this.showSizeChanger,
             pageSize: (pagination && pagination.pageSize) ||
