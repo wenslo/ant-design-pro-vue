@@ -95,7 +95,7 @@
 
 <script>
 import { STable } from '@/components'
-import { getUserList } from '@/api/user'
+import { getUserList, updateUser } from '@/api/user'
 
 export default {
   name: 'TableList',
@@ -163,13 +163,19 @@ export default {
     },
     handleEdit (user) {
       this.mdl = Object.assign({}, user)
+      if (user.enabled !== null) {
+        this.mdl.enabled = user.enabled.toString()
+      }
       this.visible = true
     },
-    handleRemove (user) {
-      console.log('enter into handle remove', user)
+    handleRemove () {
+      console.log('enter into handle remove')
     },
-    handleOk (user) {
-      console.log('enter into handle ok', user)
+    handleOk () {
+      console.log('enter into handle ok')
+      updateUser(this.mdl)
+      this.visible = false
+      this.$refs.table.refresh()
     },
     handleCancel () {
       this.visible = false
